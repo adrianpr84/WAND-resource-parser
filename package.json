@@ -1,16 +1,17 @@
 {
   "name": "wand-resource-parser",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Parses lessons jsons and returns IDs of lessons, activities and resources",
   "main": "index.js",
   "scripts": {
-    "getRes": "node index.js -p C:/Work/_Gits/WAND-resource-parser/test_files/json_dump -r C:/Work/_Gits/WAND-resource-parser/test_files/resut.txt"
+    "getRes": "node index.js -p C:/Work/_Gits/WAND-resource-parser/test_files/json_dump -r C:/Work/_Gits/WAND-resource-parser/test_files/resut.txt",
+    "debug": "nodemon index.js -p C:/Work/_Gits/WAND-resource-parser/test_files/json_dump -r C:/Work/_Gits/WAND-resource-parser/test_files/resut.txt"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/adrianpr84/WAND-resource-parser.git"
   },
-  "author": "",
+  "author": "adrian.preoteasa@siveco.ro",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/adrianpr84/WAND-resource-parser/issues"
