@@ -32,7 +32,7 @@ function getLinksFromJSONs(callback) {
 		files.forEach(function(fileToParse) {
 			console.log('Reading ', fileToParse);
 			fs.readJSON(fileToParse, function(err, obj) {
-				_.each(obj.rlos, function(activity) {
+				obj && _.each(obj.rlos, function(activity) {
 					if(activity.resources) {
 						_.each(activity.resources, function(resource) {
 							recursivePass(resource, resultsArray);
