@@ -28,8 +28,9 @@ var _ = require('underscore');
  */
 function getLinksFromJSONs(callback) {
 	var resultsArray = [];
-	glob(opts.pathToResources + "/*.json", function(err, files) {
+	glob(opts.pathToResources + "/**/*.json", function(err, files) {
 		files.forEach(function(fileToParse) {
+			console.log('Reading ', fileToParse);
 			fs.readJSON(fileToParse, function(err, obj) {
 				_.each(obj.rlos, function(activity) {
 					if(activity.resources) {
@@ -65,7 +66,8 @@ function writeToResultFile(data) {
 		return element.split('/').slice(-3).join(',');
 	})
 	preparedData = "Lesson UID,Activity UID,Resource UID\n" + preparedData.join('\n');
-	fs.writeFileSync(opts.resultPath, preparedData);
+	fs.ensureFileSync(opts.resultPath);
+	fs.writeFileSync(opts.resultPath, preparedData);	
 }
 
 getLinksFromJSONs(writeToResultFile);
