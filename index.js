@@ -28,6 +28,7 @@ var _ = require('underscore');
  */
 function getLinksFromJSONs(callback) {
 	var resultsArray = [];
+	var errorsList = '';
 	var totalFiles;
 	var fileIndex = 0;
 	glob(opts.pathToResources + "/**/*.json", function(err, files) {
@@ -38,6 +39,7 @@ function getLinksFromJSONs(callback) {
 				//console.log('Working on file number ', fileIndex, ' path ', fileToParse);
 				if(!obj) {
 					console.log('!!!!!!!!!! Error reading file ', fileToParse);
+					errorsList = errorsList + fileToParse + '\r\n';
 				} else {
 					_.each(obj.rlos, function(activity) {
 						var resultPerActivity = [];
@@ -48,7 +50,7 @@ function getLinksFromJSONs(callback) {
 				}
 
 				if(fileIndex == totalFiles) {
-					callback(resultsArray);
+					callback(resultsArray, errorsList);
 				}	
 			});
 		});		
@@ -90,15 +92,27 @@ function recursivePassHolder(targetObject, resultsArray, callback) {
  * Works the array with the found resources into csv format and writes them to the destination file
  * @param  {Array} data Array of found links
  */
-function writeToResultFile(data) {
+function writeToResultFile(data, errors) {
 	console.log('########## Writing to result file ##########');
 	data = _.flatten(data);
 	var preparedData = data.map(function(element){
 		return element.split('/').slice(-3).join(',');
-	})
+	});
+
 	preparedData = "Lesson UID,Activity UID,Resource UID\n" + preparedData.join('\n');
 	fs.ensureFileSync(opts.resultPath);
-	fs.writeFileSync(opts.resultPath, preparedData);	
+	fs.writeFileSync(opts.resultPath, preparedData);
+
+	var rawData = data.join('\n');
+	//write the raw data resources paths
+	var rawDataPath = path.join(path.dirname(opts.resultPath), 'rawData.txt');
+	fs.ensureFileSync(rawDataPath);
+	fs.writeFileSync(rawDataPath, rawData);
+
+	//write the error log for jsons that could not be parsed
+	var errorsPath = path.join(path.dirname(opts.resultPath), 'errors.log');
+	fs.ensureFileSync(errorsPath);
+	fs.writeFileSync(errorsPath, errors);
 }
 
 getLinksFromJSONs(writeToResultFile);
